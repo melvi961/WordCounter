@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Word Counter</string>
+    <string name="app_subtitle">Text analysis for sentences, words, punctuation, and numbers</string>
+
+    <!-- Input Section -->
+    <string name="input_label">Text Input</string>
+    <string name="input_placeholder">Type or paste your text to analyze…</string>
+    <string name="error_empty_input">Please enter text before calculating.</string>
+
+    <!-- Action Buttons -->
+    <string name="btn_calculate">Calculate</string>
+    <string name="btn_generate_test">Generate test sentence</string>
+
+    <!-- Metrics Results Section -->
+    <string name="section_results">Analysis Results</string>
+    <string name="label_sentences">Sentences</string>
+    <string name="label_words">Words</string>
+    <string name="label_punctuation">Punctuation</string>
+    <string name="label_numbers">Numbers</string>
+
+    <!-- History Section -->
+    <string name="section_history">Calculation History</string>
+    <string name="history_format_legend">Format: \"Text\" => Sentences, Words, Punctuation, Numbers</string>
+    <string name="empty_history">No calculations in this run yet. Enter text and tap Calculate.</string>
+
+    <!-- Predefined Test Sentences for Random Generation -->
+    <string-array name="sample_sentences">
+        <item>Good morning! How are you today?</item>
+        <item>In 2026, technology is advancing faster than ever.</item>
+        <item>The quick brown fox jumps over 10 lazy dogs.</item>
+        <item>Kotlin and Jetpack Compose make Android development fun, simple, and clean!</item>
+        <item>Can you count 1, 2, 3, and 4 items in this sentence?</item>
+        <item>Hello world! This is a test sentence; it has words, 42 numbers, and symbols: (yes)!</item>
+    </string-array>
+</resources>
