@@ -19,8 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +68,8 @@ fun WordCounterScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .testTag(TestTags.MAIN_LIST),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Spacing at top
@@ -90,7 +93,9 @@ fun WordCounterScreen(
                         OutlinedTextField(
                             value = uiState.inputText,
                             onValueChange = { viewModel.onInputTextChanged(it) },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(TestTags.INPUT_TEXT_FIELD),
                             label = { Text(text = stringResource(id = R.string.input_label)) },
                             placeholder = { Text(text = stringResource(id = R.string.input_placeholder)) },
                             isError = uiState.isInputError,
@@ -99,7 +104,8 @@ fun WordCounterScreen(
                                     Text(
                                         text = stringResource(id = R.string.error_empty_input),
                                         color = MaterialTheme.colorScheme.error,
-                                        style = MaterialTheme.typography.bodySmall
+                                        style = MaterialTheme.typography.bodySmall,
+                                        modifier = Modifier.testTag(TestTags.ERROR_TEXT)
                                     )
                                 }
                             },
@@ -113,7 +119,9 @@ fun WordCounterScreen(
                         ) {
                             Button(
                                 onClick = { viewModel.onCalculateClicked() },
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .testTag(TestTags.BTN_CALCULATE)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Calculate,
@@ -126,7 +134,9 @@ fun WordCounterScreen(
 
                             OutlinedButton(
                                 onClick = { viewModel.onGenerateTestSentence(sampleSentences) },
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .testTag(TestTags.BTN_GENERATE_TEST)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.AutoAwesome,
@@ -178,7 +188,9 @@ fun WordCounterScreen(
             if (uiState.history.isEmpty()) {
                 item {
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(TestTags.HISTORY_EMPTY),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                         )
@@ -213,7 +225,9 @@ fun WordCounterScreen(
 @Composable
 private fun MetricsGrid(metrics: TextMetricsResult) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(TestTags.METRICS_GRID),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
@@ -224,13 +238,17 @@ private fun MetricsGrid(metrics: TextMetricsResult) {
                 title = stringResource(id = R.string.label_sentences),
                 value = metrics.sentenceCount,
                 icon = Icons.Default.FormatListNumbered,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                cardTag = TestTags.METRIC_CARD_SENTENCES,
+                valueTag = TestTags.METRIC_VALUE_SENTENCES
             )
             MetricCard(
                 title = stringResource(id = R.string.label_words),
                 value = metrics.wordCount,
                 icon = Icons.Default.TextFields,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                cardTag = TestTags.METRIC_CARD_WORDS,
+                valueTag = TestTags.METRIC_VALUE_WORDS
             )
         }
 
@@ -242,13 +260,17 @@ private fun MetricsGrid(metrics: TextMetricsResult) {
                 title = stringResource(id = R.string.label_punctuation),
                 value = metrics.punctuationCount,
                 icon = Icons.Default.AutoAwesome,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                cardTag = TestTags.METRIC_CARD_PUNCTUATION,
+                valueTag = TestTags.METRIC_VALUE_PUNCTUATION
             )
             MetricCard(
                 title = stringResource(id = R.string.label_numbers),
                 value = metrics.numberCount,
                 icon = Icons.Default.Numbers,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                cardTag = TestTags.METRIC_CARD_NUMBERS,
+                valueTag = TestTags.METRIC_VALUE_NUMBERS
             )
         }
     }
@@ -259,10 +281,13 @@ private fun MetricCard(
     title: String,
     value: Int,
     icon: ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardTag: String? = null,
+    valueTag: String? = null
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .then(if (cardTag != null) Modifier.testTag(cardTag) else Modifier),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
@@ -284,7 +309,8 @@ private fun MetricCard(
                 text = value.toString(),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = if (valueTag != null) Modifier.testTag(valueTag) else Modifier
             )
             Text(
                 text = title,
@@ -303,7 +329,9 @@ private fun MetricCard(
 @Composable
 private fun HistoryCard(item: CalculationHistoryItem) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(TestTags.HISTORY_ITEM),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -328,7 +356,8 @@ private fun HistoryCard(item: CalculationHistoryItem) {
                     fontFamily = FontFamily.Monospace,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.testTag(TestTags.HISTORY_ITEM_TEXT)
                 )
             }
         }
